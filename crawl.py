@@ -5,11 +5,17 @@ import json
 def main():
     json_open = open('secret.json','r')
     secrets = json.load(json_open)
-    print(secrets.keys())
-    print(secrets['consumer_key'])
-    print(secrets['consumer_secret'])
-    print(secrets['access_token'])
-    print(secrets['access_secret'])
+    # print(secrets.keys())
+    print(secrets['APIkey'])
+    print(secrets['APIkeysecret'])
+    print(secrets['Bearertoken'])
+
+    auth = tweepy.OAuthHandler(secrets['APIkey'],secrets['APIkeysecret'])
+    auth.set_access_token(secrets['AccessToken'], secrets['AccessTokenSecret'])
+    api= tweepy.API(auth)
+    print(api, auth)
+    api.update_status("投稿テスト")
+
 
 if __name__ == '__main__':
     main()
