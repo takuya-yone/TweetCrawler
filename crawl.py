@@ -1,24 +1,40 @@
 import tweepy
 import json
+from icecream import ic
+from datetime import datetime
 
-
-def main():
+def apiobj():
     json_open = open('secret.json','r')
     secrets = json.load(json_open)
-    # print(secrets.keys())
-    print(secrets['APIkey'])
-    print(secrets['APIkeysecret'])
-    print(secrets['Bearertoken'])
+    # ic(secrets.keys())
+    # ic(secrets['APIkey'])
+    # ic(secrets['APIkeysecret'])
+    # ic(secrets['Bearertoken'])
 
     auth = tweepy.OAuthHandler(secrets['APIkey'],secrets['APIkeysecret'])
     auth.set_access_token(secrets['AccessToken'], secrets['AccessTokenSecret'])
     api= tweepy.API(auth)
-    print(api, auth)
-    api.update_status("投稿テスト")
+    return api
 
+
+def post_tweet(api:tweepy.API):
+    ic(api)
+    api.update_status('tweet from python ' + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
+def get_tweet(abi:tweepy.API):
+    account = 'Satoru_191'
+    tweets = api.user_timeline(account,count=10,page=1)
+    for tweet in tweets:
+        ic(tweet.id)
+        ic(tweet.user.name)
+        ic(tweet.created_at)
+        ic(tweet.text)
 
 if __name__ == '__main__':
-    main()
+    # main()
+    api = apiobj()
+    # post_tweet(api)
+    get_tweet(api)
 
 # # 認証に必要なキーとトークン
 # API_KEY = 'your_api_key'
@@ -35,5 +51,5 @@ if __name__ == '__main__':
 # tweets = api.search(q=['Python'], count=10)
 
 # for tweet in tweets:
-#     print('-----------------')
-#     print(tweet.text)
+#     ic('-----------------')
+#     ic(tweet.text)
